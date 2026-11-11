@@ -186,6 +186,11 @@ footer button{color:var(--muted);text-decoration:underline}
 .peek-row b{font-weight:400;font-size:17px}
 .peek-row em{margin-left:auto;font-style:normal;font-size:12px;background:var(--red);color:#fff;padding:3px 6px}
 .dlg .box{max-height:92vh;overflow:auto}
+/* delete */
+.chip.del{margin-left:auto;color:var(--red);border-color:var(--red)}
+.chip.del:hover{background:var(--red);color:#fff}
+.tile .tdel{position:absolute;bottom:16px;right:16px;width:36px;height:36px;display:none;align-items:center;justify-content:center;background:#fff;border:1.5px solid var(--ink);font-size:16px;z-index:3}
+.tile:hover .tdel{display:flex}.tile .tdel:hover{background:var(--red);border-color:var(--red)}
 @media(max-width:900px){
   .grid.two,.sheet-body,.row{grid-template-columns:1fr}
   .tagpick{grid-template-columns:repeat(2,1fr)}
@@ -321,7 +326,7 @@ function renderNav(){
 }
 function toggleDrop(e){e.stopPropagation();const d=$('#drop');d.classList.toggle('open');if(d.classList.contains('open')){S.notes.forEach(x=>{if(x.to===S.role)x.read=true});save();setTimeout(()=>{const b=$('.avisos');if(b){b.classList.add('none');b.querySelector('.dot').textContent=''}},600)}}
 document.addEventListener('click',()=>{const d=$('#drop');if(d)d.classList.remove('open')});
-function openFromNote(id){if(S.role==='company')openManage(id);else openBrief(id)}
+function openFromNote(id){if(!id||!S.briefs.find(b=>b.id===id))return;if(S.role==='company')openManage(id);else openBrief(id)}
 
 /* ---------- routing ---------- */
 function go(r){route=r;render();window.scrollTo(0,0)}
@@ -374,7 +379,7 @@ function Company(){
     <button class="tile ghost" onclick="openNew()"><h3>+ New brief</h3><div class="b">Two minutes. Tag, three lines, budget, deadline.</div></button>
     ${mine.map(b=>{
       const fresh=b.apps.filter(a=>a.status==='pending'&&Date.now()-a.at<DAY).length;
-      return `<button class="tile ${col(b.tag)}" onclick="openManage('${b.id}')">
+      return `<button class="tile ${col(b.tag)}" onclick="openManage('${b.id}')"><span class="tdel" title="Delete brief" onclick="event.stopPropagation();askDelete('${b.id}')">🗑</span>
         ${b.status==='selected'?'<span class="badge">In progress</span>':fresh?`<span class="badge new">${fresh} new</span>`:''}
         <div><div class="tag">${esc(b.tag)}</div><h3>${esc(b.title)}</h3></div>
         <div class="meta">
@@ -480,7 +485,7 @@ function openManage(id){
   <div class="sheet-head"><div class="brand"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmoAAABdCAYAAAAVMkpDAAAJRElEQVR4Xu3d4VbjOgyF0Zm7eP9Xnrsy0CEtSZNjS5Zkf/s3NLLs2Ie0wO9fAIBWf1q/8cvvzu8HMDk2CdzVeyBlZXkPqD2yvHZmM/VFHYtqlTXxqrevUX1T646q05PSg+jxK7W+Cqv949evrsIteTWhZ2KseY0RgJ+Re8j+WqvsFyP7G20b6yrzmk3vOgubu/+ydRIAktg25t7NvUf09XFt9dAVeX8sg6AGAM+yBaRs9WREYMC0CGoA8C3zgT9jYMvc77vUp2ozjHmjjkPtkyW11jNWryMhqAHAp5BNuEGVOgEYIKgBQJ2Q9kBY+4me5BX5NK08ghqAlVV+O7F6MKle/54aRKqPvVL91rVav94lghoA1DX80AAw1vZ31ABgRVYhR32a8mB1/bC/75QQvcin9f7AF4IavHBzIrPekGSxvvev0VtPtYDSO96MtvlUxlVtzqx/wBhBmQ/F0LkjqAFYTc/mbRHQjjxet6c2ABPiM2oAcI9XSNvbrtF6HULeJ/qQR+taxg5BDcBKWg7xnvDUauYDTpmDiN73UOdN6UUGlepVam1ZZ8rrdyGoAcA59eC11HLtYYcHgDEIagBWUTHEtIQ18PZnBius3SF7CkENAI5VPWiGHB6NlNr2/a80F2qtSk8iValzo9Safp0R1AAgN/XgBzARghoA/EQ4qk95qgJbkffP6Hl3vx5BDcAK3DdTZ5EHnxVlDo7GW6kHaq1KbyJkr69ViXVGUAOA+cx6sALLIagBwDP1acgoWevKjMA6XuQ6jZpv1+sS1AAA3pSD7N1BHxkCVGqtSo9GylpXrzLrjKAGAACQFEENADCzWZ8IZaQ+RbQUPc9u1/+w7BIAwFXkQdhKOcDujG/7GuU1I6m1buO604NRqvRZdafH6ty54YkaADyb9XACUBBBDQDgxSv03nkisudVB76pc2Ipy/y61EFQAwBkEHnQe1LH5XLYN8hShzVlPpSvdUNQA7ACdcOd9ZACUAxBDQDgwTvsEr7zUOfCkvc6U5nXQ1ADgGPmGy5ORR70I6jji1570df3os7DpuV7TBHUAODcrAcWYCU8yMyOoAZgFa0HCmFNN6pn6pyOqgtjZJ1P07oIagBwbdt4TTdf/KOGrarUcUatt6jrelP7v9fzvd0IagBW0rvhEtiA9UJ2KIIaAOgegW3Wpw89RvdEDd+j6+tRqdbRsvfGrD6CGoDVqAf7lX1oM9ucF2E9F9llH++s69ei7xav0YR/yg5gRZ7/cPnssAvb6AEHrOdBeKIGYFWjD5rXJ28zPr2IGpM6l1F1tqhU6yhVemJSJ0/U4MVkgRpQN3CsxfPJ2h1H98kqa3aVcb6KXnNnsuzZ1izXWcjc8UQNwOosN3IL/KICsst2z0yNoAYACf5NzIlKoS36iYwaHqLrVVSq1Vu1XnTXS1ADgE/bQa8e9iPN9DfcMvd5hGzj7w4TSXn02eM13yKoAcAzAhtwbnhQWR1BDQCOEdjuy/JERg0RWeq+o1KtXqr2oKtughoAvPcIbGoIGKXrEAiQtY+jZelDtfVzl2d/PV/7B4IaANyXNbTNetgil6EBBZ8IagDQZh/aMrxNGhXWoq57Rg0T2ep/p1Kt1qqPvbl+/uDtOOrmAaCes/u8eZMWbdfJvNdkri1CyB9Q3Rm1Lkcbsc6GzV2moJZ9g4FmxI0CVHF0P3gdkuyl8BC5p3vdKyXw1icAxMj6eTdF1gNUDRVZx3GkUq2zG7LOZg9qLGgAFViHtox7n3qorSKqLxnXiIWofrrJFtRmXTgAcJfVLyawn8JKZPhZfh1nC2qWlp9cAKVZBTYv2fdYNVxEjqdSrXjmPncZg1rkzQIA2agHQUYzjGEms56zU66zTL/1udf7W0uzLkIAa2r9UwC9e+kZdY9Vvx55RIYfdd2oX1/C9kQtchLeaWn49j0t3wcA2WXdq2cSeX6o8xtZK/pIc5f1idrDYzBXC1gadICr+gEAGCH7eYkX2YPaa2ADgJW1vgVqiYN+HZEPGVhnXzL+MgEAAFEiA4IajCJrRZ/bc0dQA4BaOMzR6nY4SPz59eU8gpp64+M+egtgFspBX9kq48yK/u9U+YwaAKjUzZ4fqpCB+jlErz/BAn+35o63PgEAmJ/ygws/tCSyf6KmpnhcY7EDmIVy0G+y7X9q/beedsCcOk/V19klnqgBAFaQ7UB/R61VDTezUPs0glrT5dwR1ADMynzDxG1q7+HrMgzsMHfJvAY1JsgOvQQwC+Wgn8mq445Cvw/wRA0A5sYPjd8q9UKtdbWQo/ZnJLW2t3N3FNTUC+AnegjAS/YDmf0vF2W9MHcJ8UQNwMzUg0c51Faxek9WH/8o9PnEWVBTNzd8o3cAkFelPVqtdZWwo/Ylglrj6dzxRA0AnmU+7DLXtlEPJ/hS1gtzl9S7oMak6egZkM8s96Vy6D70jr3lmjOiD77o7xtXT9R6b/KV0CtgHhwcc6u0X6u1zr521X5EUms9nLuroLZRL7QiegTk1nKPZjrwWmppGXOP0dfDe8qaYe4SuxPUAGBVymHnJaqGqOtmRT980NcLd4MaafscvQFqaL1Xow6S7bqt124d60oq9UittXXdZKf2IQO15h9zdzeobdSLrYCeAGvoCU0tqh207IV1Rc5dtXUeQglqhLVnkYsbQJve+9Y7sFm8fu8YNxygx+gLRnhaZx8NV9w2gdUXq8VGOLtqayRiTqv0KKI3niz2sP3c9fbHch301rIai7UwSqVaPVRe211z1xLUHk/WLDeXSiovFgCfujbOF2d74dFe4blvRu1NUddFv8i587wXptIa1B4b3WaVZkcuaAD1jNwbLfenkXVXtPXHst/AkX/rTP2M2pEVFuwKYwRWM8t9Pcs4olTqX6VaLc0w7uYx9DxR23sUMNtPYs2NBVBC9b0reo+Kvj7aRc7dbFnBlcUTtaPANoPIRQxgrIr3u0fNHKD30CeM8HedWQe1zbZ5eGwgo1SvH0CbKvd+lTorqXRmWdRq8RqjVKr1StNYrN76PLIvKPtPH03NAzClbT/IuGd571PqmL3rwZzUdbY8z6C2l/FzIGwyAM5k2rPYq3Litz8xwp9RQe3hdcMZnazZ8AAoIt8ZyLxfZa6tVdYnqUd6aq00d5VqvUueu4xNsAhvGccFYC4We9Ue+xaAH/4HloVf7bWQxikAAAAASUVORK5CYII=" alt="Elisava"><span>Brief</span></div><button class="x" onclick="closeSheet()">Close ✕</button></div>
   <div class="sheet-body one">
     <div>
-      <div class="chips" style="margin:10px 0 0"><span class="chip ${col(b.tag)}" style="border-color:transparent">${esc(b.tag)}</span>${b.status==='selected'?'<span class="chip on">In progress</span>':'<span class="chip">Open for applications</span>'}</div>
+      <div class="chips" style="margin:10px 0 0"><span class="chip ${col(b.tag)}" style="border-color:transparent">${esc(b.tag)}</span>${b.status==='selected'?'<span class="chip on">In progress</span>':'<span class="chip">Open for applications</span>'}<button class="chip del" onclick="askDelete('${b.id}')">🗑 Delete brief</button></div>
       <h1 class="page" style="margin-top:22px">${esc(b.title)}</h1>
       <p class="dl">${esc(b.desc)}</p>
       <div class="facts">
@@ -624,6 +629,25 @@ function openPerson(bid,i){
       <button class="btn light" style="margin-top:0" onclick="closeDlg();openChat('${b.id}','${a.aid}')">💬 Chat</button>
     </div>`;
   $('#dlg').classList.add('open');
+}
+
+/* ---------- delete ---------- */
+function askDelete(id){
+  const b=S.briefs.find(x=>x.id===id);if(!b)return;
+  const n=b.apps.length;
+  $('#dlgbox').innerHTML=`
+    <h2>Delete this brief?</h2>
+    <p>“${esc(b.title)}” will be removed for everyone, together with ${n} application${n===1?'':'s'}, chats and files. This can’t be undone.</p>
+    ${b.status==='selected'?'<p style="color:var(--red)">You already selected someone. Deleting does not cancel your payment commitment, so agree it with them in the chat first.</p>':''}
+    <div style="display:flex;gap:12px;flex-wrap:wrap"><button class="btn" style="background:var(--red)" onclick="doDelete('${id}')">Delete brief</button><button class="btn light" onclick="closeDlg()">Cancel</button></div>`;
+  $('#dlg').classList.add('open');
+}
+function doDelete(id){
+  const b=S.briefs.find(x=>x.id===id);if(!b)return;
+  if(b.apps.some(a=>a.aid===ME_ALUMNI.id))notify('alumni',`${b.cname} removed the brief “${b.title}”`,'');
+  S.briefs=S.briefs.filter(x=>x.id!==id);
+  S.notes=S.notes.filter(x=>x.brief!==id||x.to==='alumni');
+  save();closeDlg();closeChat();closeSheet();render();toast('Brief deleted');
 }
 
 /* ---------- apply helpers ---------- */
