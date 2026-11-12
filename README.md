@@ -1,4 +1,4 @@
-# Elisava Exchange
+# Elisava Business Studio
 
 Prototype portal where small businesses post business design briefs and Elisava alumni apply.
 
