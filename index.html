@@ -466,15 +466,17 @@ function Home(){
   </div></section>
 
   <section class="blk" id="pricing"><h1 class="page" style="margin-top:0">Ways to work with us</h1>
-  <div class="grid two price">${['A','B'].map(k=>{const p=PKG[k];return `
-    <div class="tile c-${p.c}" style="cursor:default"><div><div class="tag">Option ${k}</div><h3>${p.name}</h3><div class="amt" style="margin-top:22px">~${p.weeks} weeks</div>
-      <ul><li>${p.team}</li>${p.out.map(o=>`<li>${o}</li>`).join('')}<li>Price based on timeline and scope, quoted in your proposal</li></ul></div>
-      <button class="btn" style="align-self:flex-start" onclick="openSubmit('${k}')">Start with ${p.name} →</button></div>`}).join('')}
+  <div class="grid two price">
+    <div class="tile big c-lav" style="cursor:default;min-height:420px"><div><h3>Tailored to your project</h3>
+      <ul><li>Team size and disciplines chosen for your problem</li><li>Timeline set by the scope of work</li><li>Deliverables agreed with you up front</li></ul></div></div>
+    <div class="tile big c-orange" style="cursor:default;min-height:420px"><div><h3>No fixed packages</h3>
+      <ul><li>Tell us about your problem</li><li>We come back with a proposal: scope, timeline, team and quote</li><li>No commitment until you accept it</li></ul></div>
+      <button class="btn" style="align-self:flex-start" onclick="openSubmit()">Submit a request →</button></div>
   </div>
-  <p class="note">Every project is priced individually, depending on the timeline and scope of work. You get a quote in your proposal, with no commitment until you accept it. Fees go to the Elisava Business Design department and fund the Studio; recent graduates on the team are paid as interns. Not sure which option fits? Submit a request and we will recommend one.</p></section>
+  <p class="note">Fees go to the Elisava Business Design department and fund the Studio; recent graduates on the team are paid as interns.</p></section>
 
   ${cases.length?`<section class="blk case" id="cases"><h1 class="page" style="margin-top:0">Cases</h1>
-  <div class="grid">${cases.map(p=>`<div class="tile ${col(p.category)}" style="cursor:default"><div><div class="tag">${esc(p.category)} · Forn Sant Pere</div><h3>${esc(p.title)}</h3></div><div>${fileList(p.delivery.files)}<div class="b" style="margin-top:10px;font-size:17px">${PKG[p.pkg].name} · ${PKG[p.pkg].weeks} weeks · ${p.team.length} people</div></div></div>`).join('')}</div></section>`:''}
+  <div class="grid">${cases.map(p=>`<div class="tile ${col(p.category)}" style="cursor:default"><div><div class="tag">${esc(p.category)} · Forn Sant Pere</div><h3>${esc(p.title)}</h3></div><div>${fileList(p.delivery.files)}<div class="b" style="margin-top:10px;font-size:17px">${p.pm?p.pm.weeks+' weeks · ':''}${p.team.length} people</div></div></div>`).join('')}</div></section>`:''}
 
   <section class="blk faq"><h1 class="page" style="margin-top:0">FAQ</h1>
     <details><summary>Who signs the contract?</summary><p>Elisava Business Studio signs a standard service agreement with your company. Elisava is the contractor, you are the client.</p></details>
@@ -505,19 +507,14 @@ function openSubmit(pkg){
       <div class="hint" id="cnt">0/500</div>
       <label class="f">4. What would success look like?</label>
       <input class="in" style="font-size:22px" maxlength="140" placeholder="e.g. 20% of customers under 25 within 6 months" oninput="upd('outcome',this.value)">
-      <label class="f">5. Which option fits you?</label>
-      <div class="pkgpick">
-        ${['A','B'].map(k=>`<button class="c-${PKG[k].c} ${draft.pkg===k?'on':''}" data-k="${k}" onclick="pickPkg(this)"><b>${PKG[k].name}</b><span>~${PKG[k].weeks} weeks</span></button>`).join('')}
-        <button class="c-beige ${draft.pkg==='?'?'on':''}" data-k="?" onclick="pickPkg(this)"><b>Not sure</b><span>Recommend one for me</span></button>
-      </div>
       <div class="row" style="grid-template-columns:1fr 1fr">
         <div><label class="f">When would you like to start?</label><select class="in" style="font-size:22px" onchange="upd('start',this.value)"><option>Within a month</option><option>In 1 to 3 months</option><option>Later this year</option><option>Just exploring</option></select></div>
         <div><label class="f">Company size</label><select class="in" style="font-size:22px" onchange="upd('size',this.value)"><option>1 to 10 people</option><option>11 to 50 people</option><option>51 to 250 people</option><option>250+ people</option></select></div>
       </div>
-      <label class="f">6. Files (optional): data, previous research, brand guide</label>
+      <label class="f">5. Files (optional): data, previous research, brand guide</label>
       ${dropzone('f-files',"readFiles(this,f=>{draft.files.push(f);drawDraftFiles()})",'Add PDF or other files')}
       <div id="draft-files"></div>
-      <label class="f">7. About you</label>
+      <label class="f">6. About you</label>
       <div class="row" style="grid-template-columns:1fr 1fr">
         <div><label class="f">Company *</label><input class="in" style="font-size:22px" placeholder="Your company" value="${esc(draft.company)}" oninput="upd('company',this.value)"></div>
         <div><label class="f">Website</label><input class="in" style="font-size:22px" placeholder="yourcompany.com" oninput="upd('website',this.value)"></div>
@@ -533,7 +530,6 @@ function openSubmit(pkg){
   sh.classList.add('open');document.body.style.overflow='hidden';pv();
 }
 function pickCat(el){draft.category=el.dataset.c;document.querySelectorAll('.tagpick button').forEach(b=>b.classList.toggle('on',b===el));pv()}
-function pickPkg(el){draft.pkg=el.dataset.k;document.querySelectorAll('.pkgpick button').forEach(b=>b.classList.toggle('on',b===el));pv()}
 function upd(k,v){draft[k]=v;pv()}
 function drawDraftFiles(){$('#draft-files').innerHTML=fileList(draft.files,'rmDraftFile');pv()}
 function rmDraftFile(i){draft.files.splice(i,1);drawDraftFiles()}
@@ -542,21 +538,20 @@ function pv(){
   const ok=draft.title.trim().length>5&&draft.context.trim().length>10&&draft.company.trim()&&draft.contact.trim()&&emailOk(draft.email)&&draft.ok;
   const b=$('#pub');if(b)b.disabled=!ok;
   const el=$('#pv');if(!el)return;
-  const pk=PKG[draft.pkg];
   el.innerHTML=`<div class="tile ${col(draft.category)}" style="min-height:440px;pointer-events:none">
     <div><div class="tag">${esc(draft.category)}${draft.company?' · '+esc(draft.company):''}</div><h3>${esc(draft.title)||'<span style="opacity:.45">Your request goes here</span>'}</h3>
     <p style="font-size:18px;line-height:1.3;margin-top:14px;opacity:.85">${esc(draft.context)}</p>
     ${draft.outcome?`<p style="font-size:17px;margin-top:10px">Success: ${esc(draft.outcome)}</p>`:''}
     ${draft.files.length?`<p style="font-size:16px;margin-top:10px">📎 ${draft.files.length} file${draft.files.length>1?'s':''}</p>`:''}</div>
-    <div class="b">${pk?`${pk.name} · ~${pk.weeks} weeks`:'Option: recommend one'}<br><span style="font-size:16px">Start: ${esc(draft.start)}</span></div></div>
+    <div class="b">Tailored proposal<br><span style="font-size:16px">Start: ${esc(draft.start)}</span></div></div>
     <p style="font-size:15px;color:var(--muted);margin-top:12px">${!emailOk(draft.email)?'Add your email to submit.':!draft.ok?'Tick the box to submit.':'Ready to submit.'}</p>`;
 }
 function submitChallenge(){
-  const id='p'+Date.now(),pk=PKG[draft.pkg];
+  const id='p'+Date.now();
   if(!S.user)S.user={email:draft.email.trim(),company:draft.company.trim(),contact:draft.contact.trim(),demo:false};
   S.projects.unshift({id,owner:ukey(),title:draft.title.trim(),category:draft.category,context:draft.context.trim(),outcome:draft.outcome.trim(),start:draft.start,pkg:draft.pkg,price:null,status:'review',created:Date.now(),files:draft.files,team:[],updates:[],chat:[],contact:{company:draft.company,name:draft.contact,email:draft.email,phone:draft.phone}});
   save();
-  sendForm('challenge',{company:draft.company,contact:draft.contact,email:draft.email,phone:draft.phone,website:draft.website,size:draft.size,category:draft.category,title:draft.title,context:draft.context,outcome:draft.outcome,start:draft.start,package:pk?`${draft.pkg} ${pk.name} (~${pk.weeks} weeks)`:'Not sure',files:draft.files.map(f=>f.name).join(', ')});
+  sendForm('challenge',{company:draft.company,contact:draft.contact,email:draft.email,phone:draft.phone,website:draft.website,size:draft.size,category:draft.category,title:draft.title,context:draft.context,outcome:draft.outcome,start:draft.start,files:draft.files.map(f=>f.name).join(', ')});
   closeSheet();route='projects';render();openSurvey(draft);
 }
 
@@ -596,7 +591,7 @@ function Projects(){
     <button class="tile ghost" onclick="openSubmit()"><h3>+ New request</h3><div class="b">Tell us the problem. We send a team and a proposal.</div></button>
     ${mine().map(p=>`<button class="tile ${col(p.category)}" onclick="openProject('${p.id}')">${badge(p)}<span class="tdel" title="Delete project" onclick="event.stopPropagation();askDelete('${p.id}')">🗑</span>
       <div><div class="tag">${esc(p.category)}</div><h3>${esc(p.title)}</h3></div>
-      <div class="meta"><div class="b">${p.pm&&p.status!=='review'&&p.status!=='proposal'?`<span style="font-size:15px">${pctNow(p)}% done</span><div class="bar" style="width:140px;background:rgba(255,255,255,.5)"><span style="width:${pctNow(p)}%"></span></div>`:''}${STAGES[stageIdx(p.status)][1]}<br>${p.price?eur(p.price):'Price in proposal'}${PKG[p.pkg]?' · '+PKG[p.pkg].name:''}</div>${p.team.length?stack(p.team):''}</div>
+      <div class="meta"><div class="b">${p.pm&&p.status!=='review'&&p.status!=='proposal'?`<span style="font-size:15px">${pctNow(p)}% done</span><div class="bar" style="width:140px;background:rgba(255,255,255,.5)"><span style="width:${pctNow(p)}%"></span></div>`:''}${STAGES[stageIdx(p.status)][1]}<br>${p.price?eur(p.price):'Quote in proposal'}</div>${p.team.length?stack(p.team):''}</div>
     </button>`).join('')}
   </div>`;
 }
@@ -617,11 +612,11 @@ function openMember(pid,i){
   $('#dlg').classList.add('open');
 }
 function openProject(id){
-  const p=P(id);if(!p)return;const sh=$('#sheet');sh.dataset.p=id;const pk=PKG[p.pkg];
+  const p=P(id);if(!p)return;const sh=$('#sheet');sh.dataset.p=id;
   sh.innerHTML=`
   <div class="sheet-head"><div class="brand" onclick="goHome()" title="Back to start"><img src="data:image/png;base64,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" alt="Elisava"><span>Project</span></div><button class="x" onclick="closeSheet()">Close ✕</button></div>
   <div class="sheet-body one"><div>
-    <div class="chips" style="margin:10px 0 0"><span class="chip ${col(p.category)}" style="border-color:transparent">${esc(p.category)}</span><span class="chip">${pk?pk.name+' · '+eur(p.price):'Option to be recommended'}</span><button class="chip del" onclick="askDelete('${p.id}')">🗑 Delete project</button></div>
+    <div class="chips" style="margin:10px 0 0"><span class="chip ${col(p.category)}" style="border-color:transparent">${esc(p.category)}</span><span class="chip">${p.price?'Quote: '+eur(p.price):'Tailored proposal'}</span><button class="chip del" onclick="askDelete('${p.id}')">🗑 Delete project</button></div>
     <h1 class="page" style="margin-top:22px">${esc(p.title)}</h1>
     ${stepper(p)}
     <p class="dl" style="margin-top:24px">${esc(p.context)}</p>
@@ -665,10 +660,10 @@ function approve(id){
 }
 function doApprove(id){const p=P(id);p.status='done';p.paid=Date.now();save();closeDlg();openProject(id);render();toast('Delivery approved. Thank you!')}
 function simulateProposal(id){
-  const p=P(id),k=p.pkg==='?'?'A':p.pkg,pk=PKG[k];
-  p.pkg=k;p.price=pk.price;p.status='proposal';
-  p.team=k==='B'?[TEAM.lead,TEAM.mentor,TEAM.s1,TEAM.s2,TEAM.s3]:[TEAM.lead,TEAM.mentor,TEAM.s1,TEAM.s3];
-  p.proposal={weeks:pk.weeks,price:pk.price,scope:'Based on your request we propose a '+pk.weeks+'-week '+pk.name+'. The team will start with research with your customers and work towards concrete recommendations.',deliv:pk.out,at:Date.now()};
+  const p=P(id);
+  p.price=1500;p.status='proposal';
+  p.team=[TEAM.lead,TEAM.mentor,TEAM.s1,TEAM.s3];
+  p.proposal={weeks:6,price:1500,scope:'Based on your request we propose a 6-week project tailored to your problem. The team will start with research with your customers and work towards concrete recommendations.',deliv:['Research with your customers','Insights and recommendations (PDF)','1 workshop with your team'],at:Date.now()};
   notify(`Your proposal for “${p.title}” is ready`,id);save();openProject(id);render();
 }
 
