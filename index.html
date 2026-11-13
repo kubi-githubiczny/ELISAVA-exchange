@@ -322,7 +322,7 @@ const CATS={
 };
 const PKG={
  A:{name:'Sprint',price:1000,weeks:4,team:'3 students · 1 alumni mentor · 1 professor',out:['Research with your customers','Insights report (PDF)','1 workshop with your team'],c:'lav'},
- B:{name:'Studio Project',price:2500,weeks:8,team:'4 to 5 students · 1 alumni mentor · 1 professor',out:['Research and concept development','Tested prototype or strategy','Final presentation + report'],c:'orange'}
+ B:{name:'Studio Project',price:2500,weeks:8,team:'4 to 5 students · 1 alumni mentor · 1 professor',out:['Research and concept development','Tested prototype or strategy','Final report'],c:'orange'}
 };
 const ME={name:'Forn Sant Pere',contact:'Montse Vidal',email:'hola@fornsantpere.cat',phone:'+34 612 345 678',kind:'Neighbourhood bakery, El Born'};
 const DAY=864e5;
@@ -398,17 +398,17 @@ function sendForm(name,data){
 
 /* ================= nav ================= */
 function renderNav(){
-  if(!S.user){$('#nav').innerHTML=`<span class="navlinks"><button onclick="jump('how')">How it works</button><button onclick="jump('team')">Team</button><button onclick="jump('pricing')">Pricing</button><button onclick="jump('cases')">Cases</button></span><button onclick="openLogin()">Enter your studio</button><button class="cta" onclick="openSubmit()">Submit a challenge</button>`;return}
+  if(!S.user){$('#nav').innerHTML=`<span class="navlinks"><button onclick="jump('how')">How it works</button><button onclick="jump('team')">Team</button><button onclick="jump('pricing')">Ways to work</button><button onclick="jump('cases')">Cases</button></span><button onclick="openLogin()">Enter your studio</button><button class="cta" onclick="openSubmit()">Submit a request</button>`;return}
   const un=myNotes().filter(x=>!x.read).length,np=mine().length;
   $('#nav').innerHTML=`
-   <span class="navlinks"><button onclick="jump('how')">How it works</button><button onclick="jump('team')">Team</button><button onclick="jump('pricing')">Pricing</button><button onclick="jump('cases')">Cases</button></span>
+   <span class="navlinks"><button onclick="jump('how')">How it works</button><button onclick="jump('team')">Team</button><button onclick="jump('pricing')">Ways to work</button><button onclick="jump('cases')">Cases</button></span>
    <button class="${route==='projects'?'on':''}" onclick="go('projects')">My studio${np?' ('+np+')':''}</button>
    <div style="position:relative">
      <button class="avisos ${un?'':'none'}" onclick="toggleDrop(event)"><span class="dot">${un||''}</span>Avisos</button>
      <div class="drop" id="drop">${myNotes().length?myNotes().map(x=>`<div class="n ${x.read?'':'unread'}" onclick="openFromNote('${x.p||''}')">${esc(x.text)}<small>${ago(x.at)}</small></div>`).join(''):'<div class="empty">Nothing new yet.</div>'}</div>
    </div>
    <button class="hide-m" onclick="logout()">Log out</button>
-   <button class="cta" onclick="openSubmit()">Submit a challenge</button>`;
+   <button class="cta" onclick="openSubmit()">Submit a request</button>`;
 }
 function toggleDrop(e){e.stopPropagation();const d=$('#drop');d.classList.toggle('open');if(d.classList.contains('open')){myNotes().forEach(x=>x.read=true);save();setTimeout(()=>{const b=$('.avisos');if(b){b.classList.add('none');b.querySelector('.dot').textContent=''}},600)}}
 document.addEventListener('click',()=>{const d=$('#drop');if(d)d.classList.remove('open')});
@@ -443,19 +443,19 @@ function Home(){
   <h1 class="hero">Elisava Business Studio</h1>
   <p class="lead">Bring a real business problem. A team of Elisava students led by industry professionals solves it for you.</p>
   <div class="grid two">
-    <button class="tile big c-orange" onclick="openSubmit()"><h3>Submit a challenge</h3><div class="b">Five minutes. Tell us the problem, we come back with a team and a proposal.</div></button>
+    <button class="tile big c-orange" onclick="openSubmit()"><h3>Submit a request</h3><div class="b">Five minutes. Tell us the problem, we come back with a team and a proposal.</div></button>
     <button class="tile big c-lav" onclick="jump('how')"><h3>How it works</h3><div class="b">Elisava works as your contractor. You are our client.</div></button>
   </div>
 
-  <section class="blk" id="how"><div class="eyebrow">Process</div><h1 class="page" style="margin-top:0">How it works</h1>
+  <section class="blk" id="how"><h1 class="page" style="margin-top:0">How it works</h1>
   <div class="grid how">
-    <div class="tile c-green"><h3>01 Submit</h3><div class="b">Describe your challenge, e.g. “I want my company to reach more Gen Z”.</div></div>
+    <div class="tile c-green"><h3>01 Submit</h3><div class="b">Describe your request, e.g. “I want my company to reach more Gen Z”.</div></div>
     <div class="tile c-yellow"><h3>02 Proposal</h3><div class="b">Within 5 working days we send scope, timeline, price and your team.</div></div>
     <div class="tile c-pink"><h3>03 Sprints</h3><div class="b">The team works with you in weekly check-ins, led by an Elisava professor.</div></div>
-    <div class="tile c-beige"><h3>04 Results</h3><div class="b">Research, strategy or a tested prototype you can act on, plus a final presentation.</div></div>
+    <div class="tile c-beige"><h3>04 Results</h3><div class="b">Research, strategy or a tested prototype you can act on.</div></div>
   </div></section>
 
-  <section class="blk" id="team"><div class="eyebrow">Who works on your project</div><h1 class="page" style="margin-top:0">Your team</h1>
+  <section class="blk" id="team"><h1 class="page" style="margin-top:0">Your team</h1>
   <div class="grid how">
     <div class="tile c-lav"><h3>Students</h3><div class="b">Elisava students from different disciplines (business, brand, product, UX and more) who applied and were interviewed and accepted by professors. Teams are built to be well rounded.</div></div>
     <div class="tile c-yellow"><h3>Alumni mentors</h3><div class="b">Elisava graduates working in the industry guide the team and keep it practical.</div></div>
@@ -463,18 +463,18 @@ function Home(){
     <div class="tile c-green"><h3>Recent graduates</h3><div class="b">Join selected projects as paid interns, gaining real experience for their CV.</div></div>
   </div></section>
 
-  <section class="blk" id="pricing"><div class="eyebrow">Pricing</div><h1 class="page" style="margin-top:0">Two ways to work with us</h1>
+  <section class="blk" id="pricing"><h1 class="page" style="margin-top:0">Ways to work with us</h1>
   <div class="grid two price">${['A','B'].map(k=>{const p=PKG[k];return `
-    <div class="tile c-${p.c}" style="cursor:default"><div><div class="tag">Option ${k}</div><h3>${p.name}</h3><div class="amt" style="margin-top:22px">${eur(p.price)} <small>/ project</small></div>
-      <ul><li>${p.weeks} weeks</li><li>${p.team}</li>${p.out.map(o=>`<li>${o}</li>`).join('')}</ul></div>
+    <div class="tile c-${p.c}" style="cursor:default"><div><div class="tag">Option ${k}</div><h3>${p.name}</h3><div class="amt" style="margin-top:22px">~${p.weeks} weeks</div>
+      <ul><li>${p.team}</li>${p.out.map(o=>`<li>${o}</li>`).join('')}<li>Price based on timeline and scope, quoted in your proposal</li></ul></div>
       <button class="btn" style="align-self:flex-start" onclick="openSubmit('${k}')">Start with ${p.name} →</button></div>`}).join('')}
   </div>
-  <p class="note">Fees go to the Elisava Business Design department and fund the Studio. Recent graduates on the team are paid as interns. Not sure which option fits? Submit your challenge and we will recommend one.</p></section>
+  <p class="note">Every project is priced individually, depending on the timeline and scope of work. You get a quote in your proposal, with no commitment until you accept it. Fees go to the Elisava Business Design department and fund the Studio; recent graduates on the team are paid as interns. Not sure which option fits? Submit a request and we will recommend one.</p></section>
 
-  ${cases.length?`<section class="blk case" id="cases"><div class="eyebrow">Recent work</div><h1 class="page" style="margin-top:0">Cases</h1>
+  ${cases.length?`<section class="blk case" id="cases"><h1 class="page" style="margin-top:0">Cases</h1>
   <div class="grid">${cases.map(p=>`<div class="tile ${col(p.category)}" style="cursor:default"><div><div class="tag">${esc(p.category)} · Forn Sant Pere</div><h3>${esc(p.title)}</h3></div><div>${fileList(p.delivery.files)}<div class="b" style="margin-top:10px;font-size:17px">${PKG[p.pkg].name} · ${PKG[p.pkg].weeks} weeks · ${p.team.length} people</div></div></div>`).join('')}</div></section>`:''}
 
-  <section class="blk faq"><div class="eyebrow">Questions</div><h1 class="page" style="margin-top:0">FAQ</h1>
+  <section class="blk faq"><h1 class="page" style="margin-top:0">FAQ</h1>
     <details><summary>Who signs the contract?</summary><p>Elisava Business Studio signs a standard service agreement with your company. Elisava is the contractor, you are the client.</p></details>
     <details><summary>How do you make sure the students deliver?</summary><p>Every project is led by an Elisava professor who is accountable for quality and deadlines. An alumni mentor supports the team, and you see progress in weekly check-ins and updates in your project page.</p></details>
     <details><summary>When do I pay?</summary><p>Only after you accept the proposal. You commit to the agreed fee when you accept, and it is invoiced by Elisava.</p></details>
@@ -490,13 +490,13 @@ function openSubmit(pkg){
   draft={company:S.user?.company&&!S.user.demo?S.user.company:(S.user?.demo?'Forn Sant Pere':''),contact:S.user?.contact||'',email:'',phone:'',website:'',size:'1 to 10 people',category:'Reach new customers',title:'',context:'',outcome:'',start:'Within a month',pkg:pkg||'?',files:[],ok:false,email:S.user?.email||''};
   const sh=$('#sheet');sh.dataset.p='';
   sh.innerHTML=`
-  <div class="sheet-head"><div class="brand" onclick="goHome()" title="Back to start"><img src="data:image/png;base64,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" alt="Elisava"><span>Submit a challenge</span></div><button class="x" onclick="closeSheet()">Close ✕</button></div>
+  <div class="sheet-head"><div class="brand" onclick="goHome()" title="Back to start"><img src="data:image/png;base64,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" alt="Elisava"><span>Submit a request</span></div><button class="x" onclick="closeSheet()">Close ✕</button></div>
   <div class="sheet-body">
     <div>
       <h1 class="page" style="margin-top:20px">How can we help you?</h1>
       <label class="f">1. What kind of problem is it?</label>
       <div class="tagpick" style="grid-template-columns:repeat(3,1fr)">${Object.keys(CATS).map(c=>`<button class="${col(c)} ${c===draft.category?'on':''}" data-c="${c}" onclick="pickCat(this)" style="flex-direction:column;align-items:flex-start;justify-content:space-between">${c}<small style="font-size:13px;opacity:.75">${CATS[c].d}</small></button>`).join('')}</div>
-      <label class="f">2. Your challenge, as a question</label>
+      <label class="f">2. Your request, as a question</label>
       <input class="in" maxlength="100" placeholder="e.g. How can we reach more Gen Z customers?" oninput="upd('title',this.value)">
       <label class="f">3. Context: what’s going on, what have you tried?</label>
       <textarea class="in" maxlength="500" placeholder="A few lines are enough." oninput="upd('context',this.value);$('#cnt').textContent=this.value.length+'/500'"></textarea>
@@ -505,7 +505,7 @@ function openSubmit(pkg){
       <input class="in" style="font-size:22px" maxlength="140" placeholder="e.g. 20% of customers under 25 within 6 months" oninput="upd('outcome',this.value)">
       <label class="f">5. Which option fits you?</label>
       <div class="pkgpick">
-        ${['A','B'].map(k=>`<button class="c-${PKG[k].c} ${draft.pkg===k?'on':''}" data-k="${k}" onclick="pickPkg(this)"><b>${PKG[k].name}</b><span>${eur(PKG[k].price)} · ${PKG[k].weeks} weeks</span></button>`).join('')}
+        ${['A','B'].map(k=>`<button class="c-${PKG[k].c} ${draft.pkg===k?'on':''}" data-k="${k}" onclick="pickPkg(this)"><b>${PKG[k].name}</b><span>~${PKG[k].weeks} weeks</span></button>`).join('')}
         <button class="c-beige ${draft.pkg==='?'?'on':''}" data-k="?" onclick="pickPkg(this)"><b>Not sure</b><span>Recommend one for me</span></button>
       </div>
       <div class="row" style="grid-template-columns:1fr 1fr">
@@ -523,8 +523,8 @@ function openSubmit(pkg){
         <div><label class="f">Email *</label><input class="in" style="font-size:22px" type="email" placeholder="you@company.com" value="${esc(S.user?.email||'')}" oninput="upd('email',this.value)"></div>
         <div><label class="f">Phone / WhatsApp</label><input class="in" style="font-size:22px" oninput="upd('phone',this.value)"></div>
       </div>
-      <label class="consent"><input type="checkbox" onchange="upd('ok',this.checked)"><span>I understand Elisava will review my challenge and send a proposal. Submitting is free. If I accept the proposal, I commit to pay the agreed fee to Elisava Business Studio.</span></label>
-      <button class="btn" id="pub" disabled onclick="submitChallenge()">Submit challenge →</button>
+      <label class="consent"><input type="checkbox" onchange="upd('ok',this.checked)"><span>I understand Elisava will review my request and send a proposal. Submitting is free. If I accept the proposal, I commit to pay the agreed fee to Elisava Business Studio.</span></label>
+      <button class="btn" id="pub" disabled onclick="submitChallenge()">Submit request →</button>
     </div>
     <div class="preview-wrap"><div class="lbl">Preview · what our team will see</div><div id="pv"></div></div>
   </div>`;
@@ -542,19 +542,19 @@ function pv(){
   const el=$('#pv');if(!el)return;
   const pk=PKG[draft.pkg];
   el.innerHTML=`<div class="tile ${col(draft.category)}" style="min-height:440px;pointer-events:none">
-    <div><div class="tag">${esc(draft.category)}${draft.company?' · '+esc(draft.company):''}</div><h3>${esc(draft.title)||'<span style="opacity:.45">Your challenge goes here</span>'}</h3>
+    <div><div class="tag">${esc(draft.category)}${draft.company?' · '+esc(draft.company):''}</div><h3>${esc(draft.title)||'<span style="opacity:.45">Your request goes here</span>'}</h3>
     <p style="font-size:18px;line-height:1.3;margin-top:14px;opacity:.85">${esc(draft.context)}</p>
     ${draft.outcome?`<p style="font-size:17px;margin-top:10px">Success: ${esc(draft.outcome)}</p>`:''}
     ${draft.files.length?`<p style="font-size:16px;margin-top:10px">📎 ${draft.files.length} file${draft.files.length>1?'s':''}</p>`:''}</div>
-    <div class="b">${pk?`${pk.name} · ${eur(pk.price)}`:'Option: recommend one'}<br><span style="font-size:16px">Start: ${esc(draft.start)}</span></div></div>
+    <div class="b">${pk?`${pk.name} · ~${pk.weeks} weeks`:'Option: recommend one'}<br><span style="font-size:16px">Start: ${esc(draft.start)}</span></div></div>
     <p style="font-size:15px;color:var(--muted);margin-top:12px">${!emailOk(draft.email)?'Add your email to submit.':!draft.ok?'Tick the box to submit.':'Ready to submit.'}</p>`;
 }
 function submitChallenge(){
   const id='p'+Date.now(),pk=PKG[draft.pkg];
   if(!S.user)S.user={email:draft.email.trim(),company:draft.company.trim(),contact:draft.contact.trim(),demo:false};
-  S.projects.unshift({id,owner:ukey(),title:draft.title.trim(),category:draft.category,context:draft.context.trim(),outcome:draft.outcome.trim(),start:draft.start,pkg:draft.pkg,price:pk?pk.price:null,status:'review',created:Date.now(),files:draft.files,team:[],updates:[],chat:[],contact:{company:draft.company,name:draft.contact,email:draft.email,phone:draft.phone}});
+  S.projects.unshift({id,owner:ukey(),title:draft.title.trim(),category:draft.category,context:draft.context.trim(),outcome:draft.outcome.trim(),start:draft.start,pkg:draft.pkg,price:null,status:'review',created:Date.now(),files:draft.files,team:[],updates:[],chat:[],contact:{company:draft.company,name:draft.contact,email:draft.email,phone:draft.phone}});
   save();
-  sendForm('challenge',{company:draft.company,contact:draft.contact,email:draft.email,phone:draft.phone,website:draft.website,size:draft.size,category:draft.category,title:draft.title,context:draft.context,outcome:draft.outcome,start:draft.start,package:pk?`${draft.pkg} ${pk.name} ${eur(pk.price)}`:'Not sure',files:draft.files.map(f=>f.name).join(', ')});
+  sendForm('challenge',{company:draft.company,contact:draft.contact,email:draft.email,phone:draft.phone,website:draft.website,size:draft.size,category:draft.category,title:draft.title,context:draft.context,outcome:draft.outcome,start:draft.start,package:pk?`${draft.pkg} ${pk.name} (~${pk.weeks} weeks)`:'Not sure',files:draft.files.map(f=>f.name).join(', ')});
   closeSheet();route='projects';render();openSurvey(draft);
 }
 
@@ -562,9 +562,9 @@ function submitChallenge(){
 function openSurvey(d){
   $('#dlgbox').innerHTML=`
    <div class="survey">
-    <h2>Thanks! Your challenge is in.</h2>
+    <h2>Thanks! Your request is in.</h2>
     <p>We’ll get back to you within 5 working days. While you’re here: 3 quick questions help us shape the Studio.</p>
-    <label class="f">Would you pay €1,000 to have this challenge solved by an Elisava team?</label>
+    <label class="f">Would you pay €1,000 to have this solved by an Elisava team?</label>
     ${['Yes','Maybe, depends on the proposal','No'].map(o=>`<label class="opt"><input type="radio" name="q1" value="${o}">${o}</label>`).join('')}
     <label class="f">How much would you be willing to pay for this project?</label>
     ${['Under €500','€500 to €1,000','€1,000 to €2,500','More than €2,500'].map(o=>`<label class="opt"><input type="radio" name="q2" value="${o}">${o}</label>`).join('')}
@@ -572,7 +572,7 @@ function openSurvey(d){
     ${['A professor leading the team','Seeing past cases','A contract and clear deliverables','Meeting the team first'].map(o=>`<label class="opt"><input type="radio" name="q3" value="${o}">${o}</label>`).join('')}
     <label class="f">Anything else? (optional)</label>
     <input class="in" id="q4" style="font-size:20px">
-    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px"><button class="btn" onclick="sendSurvey('${esc(d.company)}','${esc(d.email)}','${d.pkg}')">Send answers</button><button class="btn light" onclick="closeDlg();toast('Challenge submitted')">Skip</button></div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px"><button class="btn" onclick="sendSurvey('${esc(d.company)}','${esc(d.email)}','${d.pkg}')">Send answers</button><button class="btn light" onclick="closeDlg();toast('Request submitted')">Skip</button></div>
    </div>`;
   $('#dlg').classList.add('open');
 }
@@ -591,7 +591,7 @@ function Projects(){
   <p class="sub">${esc(me().company||me().email)} · ${mine().length} project${mine().length===1?'':'s'}</p>
   ${summary()}
   <div class="grid">
-    <button class="tile ghost" onclick="openSubmit()"><h3>+ New challenge</h3><div class="b">Tell us the problem. We send a team and a proposal.</div></button>
+    <button class="tile ghost" onclick="openSubmit()"><h3>+ New request</h3><div class="b">Tell us the problem. We send a team and a proposal.</div></button>
     ${mine().map(p=>`<button class="tile ${col(p.category)}" onclick="openProject('${p.id}')">${badge(p)}<span class="tdel" title="Delete project" onclick="event.stopPropagation();askDelete('${p.id}')">🗑</span>
       <div><div class="tag">${esc(p.category)}</div><h3>${esc(p.title)}</h3></div>
       <div class="meta"><div class="b">${p.pm&&p.status!=='review'&&p.status!=='proposal'?`<span style="font-size:15px">${pctNow(p)}% done</span><div class="bar" style="width:140px;background:rgba(255,255,255,.5)"><span style="width:${pctNow(p)}%"></span></div>`:''}${STAGES[stageIdx(p.status)][1]}<br>${p.price?eur(p.price):'Price in proposal'}${PKG[p.pkg]?' · '+PKG[p.pkg].name:''}</div>${p.team.length?stack(p.team):''}</div>
@@ -627,7 +627,7 @@ function openProject(id){
     ${p.files.length?`<label class="f">Your files</label>${fileList(p.files)}`:''}
 
     ${p.pm&&p.status!=='review'&&p.status!=='proposal'?dashboard(p):''}
-    ${p.status==='review'?`<div class="empty-box" style="color:var(--ink);margin-top:26px">Under review ✓ The Studio is reading your challenge. You’ll get a proposal with scope, price and your team within 5 working days.<br><button class="demo-link" onclick="simulateProposal('${p.id}')">Demo only: simulate the proposal arriving</button></div>`:''}
+    ${p.status==='review'?`<div class="empty-box" style="color:var(--ink);margin-top:26px">Under review ✓ The Studio is reading your request. You’ll get a proposal with scope, price and your team within 5 working days.<br><button class="demo-link" onclick="simulateProposal('${p.id}')">Demo only: simulate the proposal arriving</button></div>`:''}
     ${p.status==='proposal'?proposalBlock(p):''}
     ${p.delivery?deliveryBlock(p):''}
 
@@ -666,7 +666,7 @@ function simulateProposal(id){
   const p=P(id),k=p.pkg==='?'?'A':p.pkg,pk=PKG[k];
   p.pkg=k;p.price=pk.price;p.status='proposal';
   p.team=k==='B'?[TEAM.lead,TEAM.mentor,TEAM.s1,TEAM.s2,TEAM.s3]:[TEAM.lead,TEAM.mentor,TEAM.s1,TEAM.s3];
-  p.proposal={weeks:pk.weeks,price:pk.price,scope:'Based on your challenge we propose a '+pk.weeks+'-week '+pk.name+'. The team will start with research with your customers and work towards concrete recommendations.',deliv:pk.out,at:Date.now()};
+  p.proposal={weeks:pk.weeks,price:pk.price,scope:'Based on your request we propose a '+pk.weeks+'-week '+pk.name+'. The team will start with research with your customers and work towards concrete recommendations.',deliv:pk.out,at:Date.now()};
   notify(`Your proposal for “${p.title}” is ready`,id);save();openProject(id);render();
 }
 
@@ -735,7 +735,7 @@ document.addEventListener('mousemove',e=>{
   tip.textContent=t.dataset.tip;tip.style.left=(e.clientX-r.left)+'px';tip.style.top=(e.clientY-r.top)+'px';tip.style.display='block';
 });
 function summary(){
-  const ps=mine();if(!ps.length)return'<div class="empty-box" style="margin-bottom:26px">Your studio is empty. Submit your first challenge and follow it here.</div>';
+  const ps=mine();if(!ps.length)return'<div class="empty-box" style="margin-bottom:26px">Your studio is empty. Submit your first request and follow it here.</div>';
   const act=ps.filter(p=>p.status==='progress'),avg=act.length?Math.round(act.reduce((a,p)=>a+pctNow(p),0)/act.length):0;
   const inv=ps.filter(p=>['progress','delivered','done'].includes(p.status)).reduce((a,p)=>a+(p.price||0),0);
   const reps=ps.filter(p=>p.delivery).length,nexts=act.map(p=>p.pm?.next).filter(Boolean).sort()[0];
