@@ -286,6 +286,9 @@ section.blk>.eyebrow{font-size:18px;color:var(--muted);margin-bottom:6px}
 .tip{position:absolute;pointer-events:none;background:var(--ink);color:#fff;font-size:13px;padding:6px 8px;white-space:nowrap;transform:translate(-50%,-120%);display:none;z-index:3}
 .summary{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--gap);margin:4px 0 30px}
 @media(max-width:900px){.kpis,.metrics,.summary{grid-template-columns:1fr 1fr}.charts{grid-template-columns:1fr}}
+.offer-cols{display:grid;grid-template-columns:1fr 1fr;column-gap:40px}
+@media(max-width:600px){header{padding:16px}.brand img{height:20px}.nav{gap:14px;font-size:15px}.nav .cta{display:none}}
+@media(max-width:900px){.offer-cols{grid-template-columns:1fr}.brand span{display:none}.nav .cta{padding:8px 10px;font-size:15px;white-space:nowrap}.nav button{white-space:nowrap}}
 @media(max-width:900px){.split,.pkgpick{grid-template-columns:1fr}.navlinks{display:none}section.blk{margin-top:70px}}
 </style>
 </head>
@@ -466,12 +469,11 @@ function Home(){
   </div></section>
 
   <section class="blk" id="pricing"><h1 class="page" style="margin-top:0">Ways to work with us</h1>
-  <div class="grid two price">
-    <div class="tile big c-lav" style="cursor:default;min-height:420px"><div><h3>Tailored to your project</h3>
-      <ul><li>Team size and disciplines chosen for your problem</li><li>Timeline set by the scope of work</li><li>Deliverables agreed with you up front</li></ul></div></div>
-    <div class="tile big c-orange" style="cursor:default;min-height:420px"><div><h3>No fixed packages</h3>
-      <ul><li>Tell us about your problem</li><li>We come back with a proposal: scope, timeline, team and quote</li><li>No commitment until you accept it</li></ul></div>
-      <button class="btn" style="align-self:flex-start" onclick="openSubmit()">Submit a request →</button></div>
+  <div class="price">
+    <div class="tile big c-lav" style="cursor:default;min-height:0;gap:28px"><div><h3>Tailored to your project</h3><p class="b" style="margin-top:12px;max-width:900px">No fixed packages. Every project is shaped around your problem.</p>
+      <div class="offer-cols"><ul><li>Team size and disciplines chosen for your problem</li><li>Timeline set by the scope of work</li><li>Deliverables agreed with you up front</li></ul>
+      <ul><li>Tell us about your problem</li><li>We come back with a proposal: scope, timeline, team and quote</li><li>No commitment until you accept it</li></ul></div></div>
+      <button class="btn" style="align-self:flex-start;margin-top:0" onclick="openSubmit()">Submit a request →</button></div>
   </div>
   <p class="note">Fees go to the Elisava Business Design department and fund the Studio; recent graduates on the team are paid as interns.</p></section>
 
