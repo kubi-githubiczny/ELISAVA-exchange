@@ -393,7 +393,9 @@ function me(){return S.user||{company:'',contact:'You',email:''}}
 /* Netlify Forms: real submissions on the live site, silently skipped locally */
 function sendForm(name,data){
   if(location.protocol==='file:')return Promise.resolve();
-  return fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({'form-name':name,...data}).toString()}).catch(()=>{});
+  const onNetlify=/netlify\.app$/.test(location.hostname);
+  const url=onNetlify?'/':'https://elisava-exchange.netlify.app/';
+  return fetch(url,{method:'POST',mode:onNetlify?'same-origin':'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({'form-name':name,...data}).toString()}).catch(()=>{});
 }
 
 /* ================= nav ================= */
